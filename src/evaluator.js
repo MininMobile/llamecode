@@ -9,7 +9,15 @@ module.exports = exports = (instructions) => {
 			case "keyword": {
 				switch (tokens[0].value) {
 					case "log": {
-						console.log(util.stringify(tokens[1]));
+						tokens.shift();
+
+						let strings = [];
+
+						tokens.forEach((token) => {
+							strings.push(util.stringify(token));
+						});
+						
+						console.log(strings.join(""));
 					} break;
 		
 					default: {

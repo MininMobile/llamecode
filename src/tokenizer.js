@@ -5,6 +5,7 @@ module.exports = exports = (source) => {
 	let src = source.replace(/\n/g, "");
 
 	let tmp = "";
+	let pid = "";
 	let tid = "";
 
 	let tokens = [];
@@ -15,6 +16,7 @@ module.exports = exports = (source) => {
 			case "": {
 				switch (char) {
 					case "\"": {
+						pid = tid;
 						tid = "string";
 						tmp = "";
 					} break;
@@ -39,20 +41,8 @@ module.exports = exports = (source) => {
 							value: "(",
 						});
 
-						tmp = "";
-					} break;
-
-					case ")": {
-						if (tmp.length) tokens.push({
-							name: "keyword",
-							value: tmp,
-						});
-
-						tokens.push({
-							name: "arglistend",
-							value: ")",
-						});
-
+						pid = tid;
+						tid = "arglist";
 						tmp = "";
 					} break;
 
@@ -84,7 +74,7 @@ module.exports = exports = (source) => {
 							value: tmp,
 						});
 
-						tid = "";
+						tid = pid;
 						tmp = "";
 					} break;
 
@@ -93,6 +83,45 @@ module.exports = exports = (source) => {
 					}
 				}
 			} break;
+
+			case "arglist": {
+				switch (char) {
+					case "\"": {
+						pid = tid;
+						tid = "string";
+						tmp = "";
+					} break;
+
+					case ",": {
+						if (tmp.length) tokens.push({
+							name: "keyword",
+							value: tmp,
+						});
+
+						tmp = "";
+					} break;
+
+					case ")": {
+						if (tmp.length) tokens.push({
+							name: "keyword",
+							value: tmp,
+						});
+
+						tokens.push({
+							name: "arglistend",
+							value: ")",
+						});
+
+						pid = tid;
+						tid = "";
+						tmp = "";
+					} break;
+
+					default: {
+						tmp += char;
+					}
+				}
+			}
 		}
 	}
 

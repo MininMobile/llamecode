@@ -4,8 +4,11 @@ const eval = require("./src/evaluator")
 
 let src = `
 log("Yee haw!");
-log("Hot Diggity!");
+log("Hello, ", "World!");
 `;
+
+console.log("\nINPUT");
+console.log(src);
 
 let tokens = tokenize(src);
 console.log("\nTOKENS");
