@@ -28,6 +28,48 @@ module.exports = exports = (source) => {
 						tmp = "";
 					} break;
 
+					case "(": {
+						if (tmp.length) tokens.push({
+							name: "keyword",
+							value: tmp,
+						});
+
+						tokens.push({
+							name: "arglistbegin",
+							value: "(",
+						});
+
+						tmp = "";
+					} break;
+
+					case ")": {
+						if (tmp.length) tokens.push({
+							name: "keyword",
+							value: tmp,
+						});
+
+						tokens.push({
+							name: "arglistend",
+							value: ")",
+						});
+
+						tmp = "";
+					} break;
+
+					case ";": {
+						if (tmp.length) tokens.push({
+							name: "keyword",
+							value: tmp,
+						});
+
+						tokens.push({
+							name: "endline",
+							value: ";",
+						});
+
+						tmp = "";
+					} break;
+
 					default: {
 						tmp += char;
 					}
