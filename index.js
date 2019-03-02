@@ -1,5 +1,6 @@
 const tokenize = require("./src/tokenizer");
 const lex = require("./src/lexer");
+const eval = require("./src/evaluator")
 
 let src = `
 log("Yee haw!");
@@ -15,3 +16,4 @@ console.log("\nINSTRUCTIONS");
 console.log(instructions);
 
 console.log("\nOUTPUT");
+eval(instructions);

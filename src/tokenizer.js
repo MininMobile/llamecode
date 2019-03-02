@@ -20,7 +20,7 @@ module.exports = exports = (source) => {
 					} break;
 
 					case " ": {
-						tokens.push({
+						if (tmp.length) tokens.push({
 							name: "keyword",
 							value: tmp,
 						});
