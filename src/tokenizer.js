@@ -15,12 +15,6 @@ module.exports = exports = (source) => {
 		switch (tid) {
 			case "": {
 				switch (char) {
-					case "\"": {
-						pid = tid;
-						tid = "string";
-						tmp = "";
-					} break;
-
 					case " ": {
 						if (tmp.length) tokens.push({
 							name: "keyword",
@@ -84,12 +78,60 @@ module.exports = exports = (source) => {
 				}
 			} break;
 
+			case "expression": {
+				switch (char) {
+					case "0": case "1": case "2":
+					case "3": case "4": case "5":
+					case "6": case "7": case "8":
+					case "9": case "-": case "+":
+					case "/": case "*": case ".":
+					case " ":
+						tmp += char; break;
+
+					case ")": if (pid == "arglist") {
+						tokens.push({
+							name: "expression",
+							value: tmp,
+						});
+
+						tokens.push({
+							name: "arglistend",
+							value: ")",
+						});
+
+						pid = tid;
+						tid = "";
+						tmp = "";
+					} break;
+
+					default: {
+						tokens.push({
+							name: "expression",
+							value: tmp,
+						});
+
+						tid = pid;
+						pid = "expression";
+						tmp = "";
+					}
+				}
+			} break;
+
 			case "arglist": {
 				switch (char) {
 					case "\"": {
 						pid = tid;
 						tid = "string";
 						tmp = "";
+					} break;
+
+					case "0": case "1": case "2":
+					case "3": case "4": case "5":
+					case "6": case "7": case "8":
+					case "9": case ".": {
+						pid = tid;
+						tid = "expression";
+						tmp = char;
 					} break;
 
 					case ",": {

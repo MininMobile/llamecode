@@ -3,8 +3,7 @@ const lex = require("./src/lexer");
 const eval = require("./src/evaluator")
 
 let src = `
-log("Yee haw!");
-log("Hello, ", "World!");
+log("You are ", 69 - 36, " years old.");
 `;
 
 console.log("\nINPUT");
