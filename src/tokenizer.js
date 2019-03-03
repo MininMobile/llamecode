@@ -11,6 +11,7 @@ module.exports = exports = (source) => {
 	let tokens = [];
 	for (let i = 0; i < src.length; i++) {
 		let char = src[i];
+		let nchar = src[i + 1];
 
 		switch (tid) {
 			case "": {
@@ -24,12 +25,13 @@ module.exports = exports = (source) => {
 					case "0": case "1": case "2":
 					case "3": case "4": case "5":
 					case "6": case "7": case "8":
-					case "9": case ".": {
+					case "9": case "-": case "+":
+					case "/": case "*": {
 						pid = tid;
 						tid = "expression";
 						tmp = char;
 					} break;
-					
+
 					case " ": {
 						if (tmp.length) tokens.push({
 							name: "keyword",
@@ -94,49 +96,32 @@ module.exports = exports = (source) => {
 			} break;
 
 			case "expression": {
+				let valid = [
+					"0", "1", "2",
+					"3", "4", "5",
+					"6", "7", "8",
+					"9", "-", "+",
+					"/", "*", ".",
+					" "
+				];
+
 				switch (char) {
 					case "0": case "1": case "2":
 					case "3": case "4": case "5":
 					case "6": case "7": case "8":
 					case "9": case "-": case "+":
 					case "/": case "*": case ".":
-					case " ":
-						tmp += char; break;
-
-					case ")": if (pid == "arglist") {
-						tokens.push({
-							name: "expression",
-							value: tmp,
-						});
-
-						tokens.push({
-							name: "arglistend",
-							value: ")",
-						});
-
-						pid = tid;
-						tid = "";
-						tmp = "";
-					} break;
-
-					case ";": {
-						if (tmp.length) tokens.push({
-							name: "expression",
-							value: tmp,
-						});
-
-						tokens.push({
-							name: "endline",
-							value: ";",
-						});
-
-						pid = tid;
-						tid = "";
-						tmp = "";
-					} break;
+					case " ": {
+						if (valid.includes(nchar)) {
+							tmp += char;
+							break;
+						}
+					}
 
 					default: {
-						tokens.push({
+						if (valid.includes(char)) tmp += char;
+
+						if (tmp.length) tokens.push({
 							name: "expression",
 							value: tmp,
 						});
@@ -159,10 +144,20 @@ module.exports = exports = (source) => {
 					case "0": case "1": case "2":
 					case "3": case "4": case "5":
 					case "6": case "7": case "8":
-					case "9": case ".": {
+					case "9": case "-": case "+":
+					case "/": case "*": {
 						pid = tid;
 						tid = "expression";
 						tmp = char;
+					} break;
+
+					case " ": {
+						if (tmp.length) tokens.push({
+							name: "keyword",
+							value: tmp,
+						});
+
+						tmp = "";
 					} break;
 
 					case ",": {

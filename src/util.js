@@ -5,7 +5,7 @@
 function stringify(token, scope) {
 	switch (token.name) {
 		case "string": return token.value; break;
-		
+
 		case "expression": return eval(token.value).toString(); break;
 
 		case "keyword": {

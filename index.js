@@ -8,6 +8,7 @@ let y = 10;
 
 log(x);
 log(y);
+log(x + y)
 `;
 
 console.log("\nINPUT");
