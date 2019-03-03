@@ -3,7 +3,11 @@ const lex = require("./src/lexer");
 const eval = require("./src/evaluator")
 
 let src = `
-log("You are ", 69 - 36, " years old.");
+let x = 5;
+let y = 10;
+
+log(x);
+log(y);
 `;
 
 console.log("\nINPUT");

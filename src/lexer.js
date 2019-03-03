@@ -10,7 +10,7 @@ module.exports = exports = (tokens) => {
 		switch (tid) {
 			case "": {
 				switch (token.name) {
-					case "keyword": {
+					case "keyword": case "string": case "expression": {
 						tmp.push(token);
 					} break;
 
@@ -19,6 +19,8 @@ module.exports = exports = (tokens) => {
 					} break;
 
 					case "endline": {
+						if (tmp.length > 0) instructions.push(tmp);
+
 						tmp = [];
 					} break;
 				}
@@ -28,7 +30,9 @@ module.exports = exports = (tokens) => {
 				switch (token.name) {
 					case "arglistend": {
 						instructions.push(tmp);
+
 						tid = "";
+						tmp = [];
 					} break;
 
 					default: {
