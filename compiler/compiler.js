@@ -81,6 +81,13 @@ function tokenize(data) {
 			}
 		} else if (/[a-zA-Z_]/.test(char)) {
 			temp += char;
+		} else if (/[{}\[\]\(\);]/.test(char)) {
+			if (temp != "") {
+				tokens.push(temp);
+				temp = "";
+			}
+
+			tokens.push(char);
 		} else if (char == "\"") {
 			temp += char;
 			mode.string = true;
