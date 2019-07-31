@@ -150,5 +150,6 @@ function warn(text) {
 
 function error(text) {
 	console.error("\x1b[31m[err] \x1b[0m" + text);
-	throw new Error(text);
+	console.log("aborting process with non-zero exit code");
+	process.exit(1);
 }
