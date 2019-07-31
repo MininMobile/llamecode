@@ -10,8 +10,9 @@ for (let i = 0; i < files.length; i++) {
 			return error(e);
 
 		let prepped = preprocess(data);
+		let tokens = tokenize(prepped);
 
-		console.log(prepped);
+		console.log(tokens);
 	});
 }
 
@@ -39,6 +40,57 @@ function preprocess(data) {
 	}
 
 	return lines.join("\n");
+}
+
+function tokenize(data) {
+	let tokens = [];
+
+	let temp = "";
+	let mode = {
+		string: false,
+		escape: false,
+	}
+
+	for (let i = 0; i < data.length; i++) {
+		let char = data[i];
+
+		if (mode.string) {
+			if (mode.escape) {
+				let add = "\\" + char;
+
+				switch (char) {
+					case "n": add = "\n"; break;
+					case "t": add = "\t"; break;
+					case "\\": add = "\\"; break;
+					case "\"": add = "\""; break;
+				}
+
+				temp += add;
+
+				mode.escape = false;
+			} else {
+				if (char == "\"") {
+					temp += char;
+					mode.string = false;
+				} else if (char == "\\") {
+					mode.escape = true;
+				} else {
+					temp += char;
+				}
+
+			}
+		} else if (/[a-zA-Z_]/.test(char)) {
+			temp += char;
+		} else if (char == "\"") {
+			temp += char;
+			mode.string = true;
+		} else if (temp != "") {
+			tokens.push(temp);
+			temp = "";
+		}
+	}
+
+	return tokens;
 }
 
 function warn(text) {
