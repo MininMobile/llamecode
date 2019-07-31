@@ -62,7 +62,7 @@ function tokenize(data) {
 					case "n": add = "\n"; break;
 					case "t": add = "\t"; break;
 					case "\\": add = "\\"; break;
-					case "\"": add = "\""; break;
+					case "\"": add = "\""; break; 
 				}
 
 				temp += add;
@@ -79,9 +79,9 @@ function tokenize(data) {
 				}
 
 			}
-		} else if (/[a-zA-Z_]/.test(char)) {
+		} else if (/[a-zA-Z0-9_]/.test(char)) {
 			temp += char;
-		} else if (/[{}\[\]\(\);]/.test(char)) {
+		} else if (/[{}\[\]\(\);,.]/.test(char)) {
 			if (temp != "") {
 				tokens.push(temp);
 				temp = "";
