@@ -11,8 +11,9 @@ for (let i = 0; i < files.length; i++) {
 
 		let prepped = preprocess(data);
 		let tokens = tokenize(prepped);
+		let operations = scan(tokens);
 
-		console.log(tokens);
+		console.log(operations);
 	});
 }
 
@@ -100,10 +101,54 @@ function tokenize(data) {
 	return tokens;
 }
 
+function scan(tokens) {
+	let operations = [];
+
+	// loop through tokens
+		// detect keywords
+		// flip switches in temp operation object
+		// if not recognized set as name
+		// if not recognized and name is set, throw
+
+	let op = {
+		name: undefined,   // name of operation
+		type: undefined,   // (return) type of variable or function
+		arguments: [],     // arguments passable to the function
+		actions: [],       // calls inside of the function
+		methods: [],       // methods inside a class or stuct
+		fields: [],        // fields inside a class or struct
+		visibility: 1,     // 0: private, 1: public
+		function: false,   // is operation a function
+		class: false,      // is operation a class
+		struct: false,     // is operation a struct
+		variable: false,   // is operation a variable
+		expression: false, // is operation an expression
+	}
+
+	for (let i = 0; i < tokens.length; i++) {
+		let token = tokens[i];
+
+		switch (token) {
+			case "int": op.type = "int"; break;
+
+			default: {
+				if (op.name) {
+					error(`unknown token: '${token}'`);
+				} else {
+					op.name = token;
+				}
+			}
+		}
+	}
+
+	return operations;
+}
+
 function warn(text) {
 	console.warn("\x1b[33m[warn] \x1b[0m" + text);
 }
 
 function error(text) {
 	console.error("\x1b[31m[err] \x1b[0m" + text);
+	throw new Error(text);
 }
